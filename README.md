@@ -1,4 +1,10 @@
 # DateBreakup
+VERSION 3 is Live Now.
+
+What's New?
+- The code to generate data has been cleaned and made dynamic.
+- Dependencies has been updated.
+- The class name has changed and methods too. (Please refer the examples below)
 
 ## Installation
 
@@ -22,7 +28,8 @@ Or install it yourself as:
 
 #### FOR YEARS (BREAKUP in YEARS, MONTHS, WEEKS, DAYS)
 ```ruby
-DateBreakup::Range.between('01/01/2019', '31/12/2019').get_years
+# Was: DateBreakup::Range.between('01/01/2019', '31/12/2019').get_years
+DateBreakup.between('01/01/2019', '31/12/2019').in_years
 => {
     :years=>[
       {:year=>2019, :start_date=>Sat, 01 Jan 2019, :end_date=>Sat, 31 Dec 2019}
@@ -35,7 +42,8 @@ DateBreakup::Range.between('01/01/2019', '31/12/2019').get_years
 
 #### FOR MONTHS (BREAKUP in MONTHS, WEEKS, DAYS)
 ```ruby
-DateBreakup::Range.between('01/01/2019', '31/12/2019').get_months
+# Was: DateBreakup::Range.between('01/01/2019', '31/12/2019').get_months
+DateBreakup.between('01/01/2019', '31/12/2019').in_months
 => {
     :years=>[],
     :months=>[
@@ -58,7 +66,8 @@ DateBreakup::Range.between('01/01/2019', '31/12/2019').get_months
 ```
 #### FOR WEEKS (BREAKUP in WEEKS, DAYS)
 ```ruby
-DateBreakup::Range.between('01/01/2019', '31/12/2019').get_weeks
+# Was: DateBreakup::Range.between('01/01/2019', '31/12/2019').get_weeks
+DateBreakup.between('01/01/2019', '31/12/2019').in_weeks
 => {
     :years=>[],
     :months=>[],
@@ -98,7 +107,8 @@ DateBreakup::Range.between('01/01/2019', '31/12/2019').get_weeks
 ```
 #### FOR DAYS (BREAKUP in DAYS)
 ```ruby
-DateBreakup::Range.between('01/01/2019', '31/12/2019').get_days
+# Was: DateBreakup::Range.between('01/01/2019', '31/12/2019').get_days
+DateBreakup.between('01/01/2019', '31/12/2019').in_days
 => {
     :years=>[],
     :months=>[],
@@ -120,7 +130,8 @@ DateBreakup::Range.between('01/01/2019', '31/12/2019').get_days
 ### More Further Apart Dates
 
 ```ruby
-DateBreakup::Range.between('10/10/2010', '12/12/2012').get_years
+# Was: DateBreakup::Range.between('10/10/2010', '12/12/2012').get_years
+DateBreakup.between('10/10/2010', '12/12/2012').in_years
 => {
     :years=>[
       {:year=>2011, :start_date=>Sat, 01 Jan 2011, :end_date=>Sat, 31 Dec 2011}
@@ -159,11 +170,11 @@ DateBreakup::Range.between('10/10/2010', '12/12/2012').get_years
 
 After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake spec` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org). -->
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/date_breakup. -->
+Bug reports and pull requests are welcome on GitHub at https://github.com/HuzaifaSaifuddin/date_breakup.
 
 ## License
 
