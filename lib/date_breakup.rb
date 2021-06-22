@@ -1,183 +1,49 @@
-require "date_breakup/version"
-require "time_difference"
+# frozen_string_literal: true
 
-module DateBreakup
-  class Range
-    private_class_method :new
+require 'rubygems'
+require 'time_difference'
 
-    def self.between(date1, date2)
-      new(Date.parse(date1), Date.parse(date2))
-    end
+class DateBreakup
+  VERSION = '3.0.0'
 
-    def get_years
-      get_year_array(@date1, @date2)
+  def self.between(start_date, end_date)
+    new(Date.parse(start_date), Date.parse(end_date))
+  end
 
-      output = { years: @year_array, months: @month_array, weeks: @week_array, days: @day_array }
-    end
+  def initialize(start_date, end_date)
+    @start_date = start_date
+    @end_date = end_date
 
-    def get_months
-      get_month_array(@date1, @date2)
+    @years = []
+    @months = []
+    @weeks = []
+    @days = []
+  end
 
-      output = { years: @year_array, months: @month_array, weeks: @week_array, days: @day_array }
-    end
-
-    def get_weeks
-      get_week_array(@date1, @date2)
-
-      output = { years: @year_array, months: @month_array, weeks: @week_array, days: @day_array }
-    end
-
-    def get_days
-      get_day_array(@date1, @date2)
-
-      output = { years: @year_array, months: @month_array, weeks: @week_array, days: @day_array }
-    end
-
-    private
-
-    def initialize(date1, date2)
-      @date1 = date1
-      @date2 = date2
-      @year_array = Array.new
-      @month_array = Array.new
-      @week_array = Array.new
-      @day_array = Array.new
-    end
-
-    def get_year_array(date, end_date)
-      move_to_date = true
-      # YEAR
-      if move_to_date
-        if date.beginning_of_year == date
-          if date.end_of_year <= @date2
-            date, move_to_date = get_year_data(date)
-          end
+  # Methods
+  # in_years, in_months, in_weeks, in_days
+  %w[years months weeks days].each do |method|
+    define_method "in_#{method}" do
+      date = @start_date
+      while date <= @end_date
+        if date.beginning_of_year == date && @end_date >= date.end_of_year
+          @years << { year: date.year, start_date: date, end_date: date.end_of_year }
+          date = date.end_of_year + 1.day
+        elsif date.beginning_of_month == date && @end_date >= date.end_of_month
+          @months << { month: date.month, year: date.year, start_date: date, end_date: date.end_of_month }
+          date = date.end_of_month + 1.day
+        elsif date.beginning_of_week == date && @end_date >= date.end_of_week
+          @weeks << { week: date.cweek, month: date.month, year: date.year, start_date: date,
+                      end_date: date.end_of_week }
+          date = date.end_of_week + 1.day
+        else
+          @days << { day: date.yday, month_day: date.mday, month: date.month, year: date.year, start_date: date,
+                     end_date: date }
+          date += 1.day
         end
       end
 
-      # MONTH
-      if move_to_date
-        if date.beginning_of_month == date
-          if date.end_of_month <= @date2
-            date, move_to_date = get_month_data(date)
-          end
-        end
-      end
-
-      # Week
-      if move_to_date
-        if date.beginning_of_week == date && date.end_of_week <= @date2
-          if date.beginning_of_week.month == date.end_of_week.month || date.end_of_week.end_of_month >= @date2
-            date, move_to_date = get_week_data(date)
-          end
-        end
-      end
-
-      # DAY
-      if move_to_date
-        date, move_to_date = get_date_data(date)
-      end
-
-      if date <= end_date
-        get_year_array(date, end_date)
-      end
-    end
-
-    def get_month_array(date, end_date)
-      move_to_date = true
-      # MONTH
-      if move_to_date
-        if date.beginning_of_month == date
-          if date.end_of_month <= @date2
-            date, move_to_date = get_month_data(date)
-          end
-        end
-      end
-
-      # Week
-      if move_to_date
-        if date.beginning_of_week == date && date.end_of_week <= @date2
-          if date.beginning_of_week.month == date.end_of_week.month || date.end_of_week.end_of_month >= @date2
-            date, move_to_date = get_week_data(date)
-          end
-        end
-      end
-
-      # DAY
-      if move_to_date
-        date, move_to_date = get_date_data(date)
-      end
-
-      if date <= end_date
-        get_month_array(date, end_date)
-      end
-    end
-
-    def get_week_array(date, end_date)
-      move_to_date = true
-      # Week
-      if move_to_date
-        if date.beginning_of_week == date && date.end_of_week <= @date2
-          date, move_to_date = get_week_data(date)
-        end
-      end
-
-      # DAY
-      if move_to_date
-        date, move_to_date = get_date_data(date)
-      end
-
-      if date <= end_date
-        get_week_array(date, end_date)
-      end
-    end
-
-    def get_day_array(date, end_date)
-      move_to_date = true
-      # DAY
-      if move_to_date
-        date, move_to_date = get_date_data(date)
-      end
-
-      if date <= end_date
-        get_day_array(date, end_date)
-      end
-    end
-
-    def get_year_data(date)
-      year_hash = { year: date.year, start_date: date, end_date: date.end_of_year }
-      @year_array << year_hash
-      new_date = date.end_of_year + 1.day
-      move_to_date = false
-
-      return new_date, move_to_date
-    end
-
-    def get_month_data(date)
-      month_hash = { month: date.month, year: date.year, start_date: date, end_date: date.end_of_month }
-      @month_array << month_hash
-      new_date = date.end_of_month + 1.day
-      move_to_date = false
-
-      return new_date, move_to_date
-    end
-
-    def get_week_data(date)
-      week_hash = { week: date.cweek, month: date.month, year: date.year, start_date: date, end_date: date.end_of_week }
-      @week_array << week_hash
-      new_date = date.end_of_week + 1.day
-      move_to_date = false
-
-      return new_date, move_to_date
-    end
-
-    def get_date_data(date)
-      day_hash = { day: date.yday, month_day: date.mday, month: date.month, year: date.year, start_date: date, end_date: date }
-      @day_array << day_hash
-      new_date = date + 1.day
-      move_to_date = false
-
-      return new_date, move_to_date
+      { years: @years, months: @months, weeks: @weeks, days: @days }
     end
   end
 end
