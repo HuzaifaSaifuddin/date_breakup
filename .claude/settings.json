@@ -1,0 +1,23 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && file=$(jq -r '.tool_input.file_path // \"\"') && if echo \"$file\" | grep -qE '\\.rb$'; then bundle exec rubocop \"$file\" --format simple --no-color 2>/dev/null; fi",
+            "timeout": 30,
+            "statusMessage": "Running RuboCop..."
+          },
+          {
+            "type": "command",
+            "command": "cd \"$(git rev-parse --show-toplevel)\" && bundle exec rspec --format progress --no-color 2>/dev/null",
+            "timeout": 60,
+            "statusMessage": "Running tests..."
+          }
+        ]
+      }
+    ]
+  }
+}

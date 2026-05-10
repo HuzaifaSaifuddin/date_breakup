@@ -12,3 +12,6 @@
 
 *.gem
 *.DS_STORE
+
+# Claude Code personal overrides (machine-specific)
+.claude/settings.local.json

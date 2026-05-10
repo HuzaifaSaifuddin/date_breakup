@@ -1,0 +1,29 @@
+AllCops:
+  NewCops: disable
+  TargetRubyVersion: 3.3
+  SuggestExtensions: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/MethodLength:
+  Max: 30
+
+Metrics/AbcSize:
+  Max: 40
+
+Metrics/CyclomaticComplexity:
+  Max: 12
+
+Metrics/PerceivedComplexity:
+  Max: 13
+
+Metrics/BlockLength:
+  Exclude:
+    - 'spec/**/*'
+    - '*.gemspec'
+
+Layout/LineLength:
+  Max: 120
+  Exclude:
+    - 'spec/**/*'
