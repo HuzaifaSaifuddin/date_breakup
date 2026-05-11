@@ -84,3 +84,12 @@ When working on input handling:
 - When adding behaviour, add a test for the happy path and at least one edge case (e.g. same-day range, single-day range, leap year boundaries).
 - Do not add new test helpers or shared contexts — keep specs flat and explicit using `describe`/`context`/`it` blocks.
 - Tests live in `spec/*`. Currently a single `spec/date_breakup_spec.rb` covers the whole gem — there is no per-method file split convention to preserve.
+
+## RuboCop
+
+When RuboCop reports offenses after an edit:
+
+- Fix them properly by refactoring the code (extract methods, simplify logic, reduce complexity).
+- Never silence offenses with `rubocop:disable` or `rubocop:enable` inline comments. These are not acceptable under any circumstances.
+- If a violation genuinely cannot be fixed without breaking the design (e.g. a method must be long because the algorithm requires it), update `.rubocop.yml` to relax that specific cop with a comment explaining why.
+- Always prefer the refactor. Only fall back to `.rubocop.yml` if you've exhausted conventional fixes and can articulate why.
