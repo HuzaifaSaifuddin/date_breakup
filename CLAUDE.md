@@ -5,6 +5,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 ```bash
+# Install the pinned Ruby version (uses .mise.toml)
+mise install
+
 # Install dependencies
 bin/setup
 
@@ -29,7 +32,7 @@ bundle exec rake install
 bundle exec rake release
 ```
 
-Ruby is pinned to 3.3 via `.mise.toml`. CI (`.github/workflows/ci.yml`) runs `rspec` then `rubocop` on push/PR.
+Ruby is pinned to 3.3 via `.mise.toml`. CI (`.github/workflows/ci.yml`) runs `rspec` then `rubocop` on push/PR. The CI matrix is currently `['3.3']` only — broadening it is a deliberate decision, not a default.
 
 ## Architecture
 
@@ -70,6 +73,7 @@ When working on input handling:
 - Do not rescue input errors silently — invalid input should raise `ArgumentError` with a clear message, as it does today.
 - Do not add nil handling — `nil` input should raise, not return an empty result.
 - Be especially careful with end-of-month edge cases (e.g. Jan 31 → Feb 28) and leap year boundaries — these are the most likely sources of subtle breakage.
+- String inputs are parsed via `Date.parse`, so ambiguous formats (e.g. `01/02/2019`) follow `Date.parse` interpretation rules — this has historically tripped up users. Don't change the parser without flagging it; if you tighten parsing, document the new accepted formats.
 
 ## Testing
 
@@ -79,4 +83,4 @@ When working on input handling:
 - When fixing a bug, add a regression test that would have caught it before writing the fix.
 - When adding behaviour, add a test for the happy path and at least one edge case (e.g. same-day range, single-day range, leap year boundaries).
 - Do not add new test helpers or shared contexts — keep specs flat and explicit using `describe`/`context`/`it` blocks.
-- Tests live in `spec/*`.
+- Tests live in `spec/*`. Currently a single `spec/date_breakup_spec.rb` covers the whole gem — there is no per-method file split convention to preserve.
